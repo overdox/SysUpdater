@@ -29,14 +29,14 @@ jobs:
 
   release:
     needs: build
-    if: startsWith(github.ref, 'refs/tags/') # Only run for tags
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
 
     steps:
     - name: Check out code
       uses: actions/checkout@v4
 
-    - name: Set up Rust
+    - name: Install Rust toolchain
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
@@ -52,13 +52,8 @@ jobs:
         path: target/release/sysupdater
 
     - name: Create GitHub Release
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
-        body: |
-          Automated release of SysUpdater.
-        draft: false
-        prerelease: false
+        files: target/release/sysupdater
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
