@@ -1,0 +1,10 @@
+[package]
+name = "update_script2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+colored = "2.0"
+nix = { version = "0.27", features = ["user"] }
+anyhow = "1.0"
