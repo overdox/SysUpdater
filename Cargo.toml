@@ -1,5 +1,5 @@
 [package]
-name = "update_script2"
+name = "sysupdater"
 version = "0.1.0"
 edition = "2021"
 
