@@ -56,7 +56,8 @@ chmod +x /usr/local/bin/sysupdater
 ### Uso
 
 1. Ejecuta la herramienta con sudo:
-```sudo ./sysupdater
+```
+sudo ./sysupdater
 ```
 
 2. SysUpdater realizará:
