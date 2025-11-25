@@ -4,9 +4,9 @@
 
 > [🇬🇧 English](README.md) | [🇪🇸 Español](README-ES.md) | [🇫🇷 Français](README-FR.md) | 🇩🇪 Deutsch | [🇺🇦 Українська](README-UK.md) | [🇨🇳 中文](README-ZH.md)
 
-# SysUpdater
+# Fedora Utility Patchworker - FUP
 
-**SysUpdater** ist ein produktionsreifes, auf Rust basierendes Werkzeug zur Automatisierung von System-, Flatpak- und Firmware-Updates unter Fedora Linux. Es bietet sichere Standardeinstellungen, umfassende Protokollierung und eine moderne CLI-Erfahrung.
+**Fedora Utility Patchworker - FUP** ist ein produktionsreifes, auf Rust basierendes Werkzeug zur Automatisierung von System-, Flatpak- und Firmware-Updates unter Fedora Linux. Es bietet sichere Standardeinstellungen, umfassende Protokollierung und eine moderne CLI-Erfahrung.
 
 ---
 
@@ -22,7 +22,7 @@
 | **Intelligente Neustart-Erkennung** | Fordert nur zum Neustart auf, wenn Kernel oder kritische Updates dies erfordern |
 | **Netzwerk-Überprüfung** | Bestätigt Konnektivität vor dem Start der Updates |
 | **Sauberes Beenden** | Behandelt CTRL+C sauber ohne Korruption |
-| **Umfassende Protokollierung** | Zeitgestempelte Logs in `/var/log/sysupdater.log` |
+| **Umfassende Protokollierung** | Zeitgestempelte Logs in `/var/log/fup.log` |
 | **Konfigurierbar** | TOML-Konfigurationsdatei-Unterstützung mit sinnvollen Standards |
 | **Fortschrittsanzeigen** | Spinner und Echtzeit-Ausgabe |
 | **Trockenlauf-Modus** | Vorschau der Aktionen ohne Ausführung |
@@ -45,12 +45,12 @@
 
 ### Vorkompilierte Binärdatei
 
-1. Laden Sie die neueste Binärdatei von der [Releases](https://github.com/overdox/SysUpdater/releases)-Seite herunter
+1. Laden Sie die neueste Binärdatei von der [Releases](https://github.com/overdox/fedora-utility-patchworker/releases)-Seite herunter
 2. Installieren Sie sie:
 
 ```bash
-sudo mv sysupdater /usr/local/bin/
-sudo chmod +x /usr/local/bin/sysupdater
+sudo mv fup /usr/local/bin/
+sudo chmod +x /usr/local/bin/fup
 ```
 
 ### Aus dem Quellcode kompilieren
@@ -64,24 +64,24 @@ cd SysUpdater
 cargo build --release
 
 # Installieren
-sudo mv target/release/sysupdater /usr/local/bin/
+sudo mv target/release/fup /usr/local/bin/
 ```
 
 ---
 
 ## 🚀 Verwendung
 
-Das Ausführen von `sysupdater` ohne Argumente zeigt die Hilfe an:
+Das Ausführen von `fup` ohne Argumente zeigt die Hilfe an:
 
 ```
 ╔═══════════════════════════════════════════╗
-║           SysUpdater v2.0.0               ║
-║     Fedora System Update Automation       ║
+║               FUP v2.0.0                  ║
+║     Fedora Utility Patchworker            ║
 ╚═══════════════════════════════════════════╝
 
 USAGE
 
-    sudo sysupdater [OPTIONS]
+    sudo fup [OPTIONS]
 
 COMMANDS
 
@@ -96,22 +96,22 @@ COMMANDS
 
 ```bash
 # Verfügbare Updates anzeigen
-sudo sysupdater --refresh
+sudo fup --refresh
 
 # System und Flatpak-Pakete aktualisieren
-sudo sysupdater --update-all
+sudo fup --update-all
 
 # Alles einschließlich Firmware aktualisieren
-sudo sysupdater --update-all --firmware
+sudo fup --update-all --firmware
 
 # Nur Systempakete aktualisieren
-sudo sysupdater --update-system
+sudo fup --update-system
 
 # Vorschau was passieren würde (Trockenlauf)
-sudo sysupdater --update-all --dry-run
+sudo fup --update-all --dry-run
 
 # Stiller Modus für Skripte/Cron
-sudo sysupdater --update-all --quiet --no-reboot-prompt
+sudo fup --update-all --quiet --no-reboot-prompt
 ```
 
 ---
@@ -148,8 +148,8 @@ sudo sysupdater --update-all --quiet --no-reboot-prompt
 SysUpdater sucht Konfigurationsdateien in dieser Reihenfolge:
 
 1. Mit `--config` angegebener Pfad
-2. `/etc/sysupdater.toml`
-3. `~/.config/sysupdater/config.toml`
+2. `/etc/fup.toml`
+3. `~/.config/fup/config.toml`
 
 ### Beispielkonfiguration
 
@@ -167,7 +167,7 @@ remove_unused = true # Unbenutzte Flatpak-Runtimes entfernen
 enabled = false      # Firmware-Updates standardmäßig deaktiviert
 
 [logging]
-file = "/var/log/sysupdater.log"
+file = "/var/log/fup.log"
 level = "info"       # Optionen: error, warn, info, debug, trace
 
 [network]
