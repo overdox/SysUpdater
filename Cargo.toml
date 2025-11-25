@@ -1,11 +1,11 @@
 [package]
-name = "sysupdater"
-version = "0.2.0"
-edition = "2021"
+name = "fedora-utility-patchworker"
+version = "2.1.0"
+edition = "2025"
 authors = ["Dox"]
 description = "A production-ready system updater for Fedora Linux"
 license = "MIT"
-repository = "https://github.com/overdox/SysUpdater"
+repository = "https://github.com/overdox/fedora-utility-patchworker/"
 keywords = ["fedora", "linux", "updater", "dnf", "flatpak"]
 categories = ["command-line-utilities", "development-tools"]
 

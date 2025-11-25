@@ -1,5 +1,4 @@
-//! SysUpdater - Production-ready Fedora system updater
-//!
+//! FUP - fedora-utility-patchworker
 //! A robust tool for automating system, Flatpak, and firmware updates
 //! with proper error handling, logging, and user feedback.
 
@@ -14,7 +13,7 @@ mod error {
 
     #[derive(Error, Debug)]
     pub enum UpdateError {
-        #[error("Must run as root. Use: sudo sysupdater")]
+        #[error("Must run as root. Use: sudo fup")]
         NotRoot,
         #[error("No network connectivity")]
         NoNetwork,
@@ -115,7 +114,7 @@ mod config {
     impl Default for LoggingConfig {
         fn default() -> Self {
             Self {
-                file: PathBuf::from("/var/log/sysupdater.log"),
+                file: PathBuf::from("/var/log/fup.log"),
                 level: "info".into(),
             }
         }
@@ -134,8 +133,8 @@ mod config {
         pub fn load(path: Option<&PathBuf>) -> Self {
             let paths = [
                 path.cloned(),
-                Some(PathBuf::from("/etc/sysupdater.toml")),
-                dirs::config_dir().map(|p| p.join("sysupdater/config.toml")),
+                Some(PathBuf::from("/etc/fup.toml")),
+                dirs::config_dir().map(|p| p.join("fup/config.toml")),
             ];
 
             for p in paths.into_iter().flatten() {
@@ -158,7 +157,7 @@ mod cli {
     use std::path::PathBuf;
 
     #[derive(Parser, Debug, Clone)]
-    #[command(name = "sysupdater", version, about = "Fedora System Update Automation", long_about = None)]
+    #[command(name = "fup", version, about = "Fedora Utility Patchworker", long_about = None)]
     #[command(propagate_version = true)]
     pub struct Args {
         /// Check and display available updates without installing
@@ -633,8 +632,8 @@ fn print_banner() {
         "{}",
         r#"
 ╔═══════════════════════════════════════════╗
-║           SysUpdater v0.2.0               ║
-║     Fedora System Update Automation       ║
+║               FUP v2.0.0                  ║
+║     Fedora Utility Patchworker            ║
 ╚═══════════════════════════════════════════╝"#
             .cyan()
     );
@@ -645,14 +644,14 @@ fn print_usage() {
         "{}",
         r#"
 ╔═══════════════════════════════════════════╗
-║           SysUpdater v0.2.0               ║
-║     Fedora System Update Automation       ║
+║               FUP v2.0.0                  ║
+║     Fedora Utility Patchworker            ║
 ╚═══════════════════════════════════════════╝"#
             .cyan()
     );
 
     println!("\n{}\n", "USAGE".yellow().bold());
-    println!("    {} [OPTIONS]\n", "sudo sysupdater".green());
+    println!("    {} [OPTIONS]\n", "sudo fup".green());
 
     println!("{}\n", "COMMANDS".yellow().bold());
 
@@ -688,11 +687,11 @@ fn print_usage() {
     println!("\n{}\n", "EXAMPLES".yellow().bold());
 
     let examples = [
-        ("sysupdater --refresh", "Show what updates are available"),
-        ("sysupdater --update-all", "Update system and flatpak"),
-        ("sysupdater --update-all -f", "Update everything including firmware"),
-        ("sysupdater --update-system", "Update only dnf5 packages"),
-        ("sysupdater --dry-run -u", "Preview full update"),
+        ("fup --refresh", "Show what updates are available"),
+        ("fup --update-all", "Update system and flatpak"),
+        ("fup --update-all -f", "Update everything including firmware"),
+        ("fup --update-system", "Update only dnf5 packages"),
+        ("fup --dry-run -u", "Preview full update"),
     ];
 
     for (cmd, desc) in examples {
@@ -700,7 +699,7 @@ fn print_usage() {
     }
 
     println!(
-        "\n{}\n    /etc/sysupdater.toml\n    ~/.config/sysupdater/config.toml\n",
+        "\n{}\n    /etc/fup.toml\n    ~/.config/fup/config.toml\n",
         "CONFIG FILES".yellow().bold()
     );
 }
@@ -780,7 +779,7 @@ fn print_available_updates(updates: &updater::AvailableUpdates) {
     );
     println!(
         "  Run {} to install\n",
-        "sudo sysupdater --update-all".cyan()
+        "sudo fup --update-all".cyan()
     );
 }
 

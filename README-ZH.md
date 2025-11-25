@@ -4,9 +4,9 @@
 
 > [🇬🇧 English](README.md) | [🇪🇸 Español](README-ES.md) | [🇫🇷 Français](README-FR.md) | [🇩🇪 Deutsch](README-DE.md) | [🇺🇦 Українська](README-UK.md) | 🇨🇳 中文
 
-# SysUpdater
+# Fedora Utility Patchworker - FUP
 
-**SysUpdater** 是一个基于 Rust 的生产级工具，专为 Fedora Linux 设计，用于自动化系统、Flatpak 和固件更新。它具有安全的默认设置、全面的日志记录和现代化的 CLI 体验。
+**Fedora Utility Patchworker - FUP** 是一个基于 Rust 的生产级工具，专为 Fedora Linux 设计，用于自动化系统、Flatpak 和固件更新。它具有安全的默认设置、全面的日志记录和现代化的 CLI 体验。
 
 ---
 
@@ -22,7 +22,7 @@
 | **智能重启检测** | 仅在内核或关键更新需要时提示重启 |
 | **网络验证** | 在开始更新前确认网络连接 |
 | **优雅关闭** | 干净地处理 CTRL+C，不会导致数据损坏 |
-| **全面日志** | 带时间戳的日志记录到 `/var/log/sysupdater.log` |
+| **全面日志** | 带时间戳的日志记录到 `/var/log/fup.log` |
 | **可配置** | 支持 TOML 配置文件，带有合理的默认值 |
 | **进度指示器** | 旋转动画和实时输出 |
 | **试运行模式** | 预览操作而不执行 |
@@ -45,12 +45,12 @@
 
 ### 预编译二进制文件
 
-1. 从 [Releases](https://github.com/overdox/SysUpdater/releases) 页面下载最新的二进制文件
+1. 从 [Releases](https://github.com/overdox/fedora-utility-patchworker/releases) 页面下载最新的二进制文件
 2. 安装：
 
 ```bash
-sudo mv sysupdater /usr/local/bin/
-sudo chmod +x /usr/local/bin/sysupdater
+sudo mv fup /usr/local/bin/
+sudo chmod +x /usr/local/bin/fup
 ```
 
 ### 从源码构建
@@ -64,24 +64,24 @@ cd SysUpdater
 cargo build --release
 
 # 安装
-sudo mv target/release/sysupdater /usr/local/bin/
+sudo mv target/release/fup /usr/local/bin/
 ```
 
 ---
 
 ## 🚀 使用方法
 
-不带参数运行 `sysupdater` 将显示帮助：
+不带参数运行 `fup` 将显示帮助：
 
 ```
 ╔═══════════════════════════════════════════╗
-║           SysUpdater v2.0.0               ║
-║     Fedora System Update Automation       ║
+║               FUP v2.0.0                  ║
+║     Fedora Utility Patchworker            ║
 ╚═══════════════════════════════════════════╝
 
 USAGE
 
-    sudo sysupdater [OPTIONS]
+    sudo fup [OPTIONS]
 
 COMMANDS
 
@@ -96,22 +96,22 @@ COMMANDS
 
 ```bash
 # 显示可用更新
-sudo sysupdater --refresh
+sudo fup --refresh
 
 # 更新系统和 Flatpak 软件包
-sudo sysupdater --update-all
+sudo fup --update-all
 
 # 更新所有内容（包括固件）
-sudo sysupdater --update-all --firmware
+sudo fup --update-all --firmware
 
 # 仅更新系统软件包
-sudo sysupdater --update-system
+sudo fup --update-system
 
 # 预览将要发生的操作（试运行）
-sudo sysupdater --update-all --dry-run
+sudo fup --update-all --dry-run
 
 # 静默模式，用于脚本/cron
-sudo sysupdater --update-all --quiet --no-reboot-prompt
+sudo fup --update-all --quiet --no-reboot-prompt
 ```
 
 ---
@@ -148,8 +148,8 @@ sudo sysupdater --update-all --quiet --no-reboot-prompt
 SysUpdater 按以下顺序查找配置文件：
 
 1. 通过 `--config` 指定的路径
-2. `/etc/sysupdater.toml`
-3. `~/.config/sysupdater/config.toml`
+2. `/etc/fup.toml`
+3. `~/.config/fup/config.toml`
 
 ### 配置示例
 
@@ -167,7 +167,7 @@ remove_unused = true # 删除未使用的 Flatpak 运行时
 enabled = false      # 固件更新默认禁用
 
 [logging]
-file = "/var/log/sysupdater.log"
+file = "/var/log/fup.log"
 level = "info"       # 选项：error, warn, info, debug, trace
 
 [network]
