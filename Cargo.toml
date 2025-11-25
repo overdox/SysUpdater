@@ -1,10 +1,32 @@
 [package]
 name = "sysupdater"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
+authors = ["Dox"]
+description = "A production-ready system updater for Fedora Linux"
+license = "MIT"
+repository = "https://github.com/overdox/SysUpdater"
+keywords = ["fedora", "linux", "updater", "dnf", "flatpak"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
-tokio = { version = "1", features = ["full"] }
-colored = "2.0"
-nix = { version = "0.27", features = ["user"] }
-anyhow = "1.0"
+tokio = { version = "1.41", features = ["full", "signal"] }
+clap = { version = "4.5", features = ["derive", "env"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-appender = "0.2"
+colored = "2.1"
+indicatif = { version = "0.17", features = ["tokio"] }
+nix = { version = "0.27", features = ["user", "signal"] }
+dirs = "5.0"
+chrono = "0.4"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -1,78 +1,211 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Rust](https://img.shields.io/badge/Rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
+[![Fedora](https://img.shields.io/badge/Fedora-39%2B-blue.svg)](https://fedoraproject.org/)
 
-
-> 🇬🇧 English | | [🇪🇸 Spanish](README-ES.md)
+> 🇬🇧 English | [🇪🇸 Español](README-ES.md) | [🇫🇷 Français](README-FR.md) | [🇩🇪 Deutsch](README-DE.md) | [🇺🇦 Українська](README-UK.md) | [🇨🇳 中文](README-ZH.md)
 
 # SysUpdater
 
-**SysUpdater** is a lightweight and efficient Rust-based tool designed for automating system and Flatpak updates on Fedora Linux. It ensures your system is always up-to-date by handling updates, unused package cleanup, and reboots seamlessly.
+**SysUpdater** is a production-ready, Rust-based tool designed for automating system, Flatpak, and firmware updates on Fedora Linux. It features safe defaults, comprehensive logging, and a modern CLI experience.
 
 ---
 
-## Features
+## ✨ Features
 
-- Automates both system (`dnf5`) and Flatpak updates.
-- Provides real-time output for update processes.
-- Handles cleanup of unused packages.
-- Detects if a reboot is required and prompts the user for action.
-- Designed specifically for Fedora but may work on other Linux distributions with minor tweaks.
+| Feature | Description |
+|---------|-------------|
+| **Safe Defaults** | Shows help when run without flags — requires explicit action |
+| **Update Preview** | Check available updates before installing with `--refresh` |
+| **System Updates** | Automated dnf5 package updates with metadata refresh |
+| **Flatpak Updates** | Keep all Flatpak applications current |
+| **Firmware Updates** | Optional fwupd integration for UEFI/device firmware |
+| **Smart Reboot Detection** | Prompts only when kernel or critical updates require restart |
+| **Network Verification** | Confirms connectivity before starting updates |
+| **Graceful Shutdown** | Handles CTRL+C cleanly without corruption |
+| **Comprehensive Logging** | Timestamped logs to `/var/log/sysupdater.log` |
+| **Configurable** | TOML config file support with sensible defaults |
+| **Progress Indicators** | Spinners and real-time output |
+| **Dry Run Mode** | Preview actions without executing |
 
 ---
 
-## Requirements
+## 📋 Requirements
 
-- **Operating System**: Fedora Linux (or compatible distributions).
-- **Rust**: SysUpdater is written in Rust. You'll need Rust installed for building the binary from source.
+| Requirement | Details |
+|-------------|---------|
+| **Operating System** | Fedora Linux 39+ (or compatible distributions) |
+| **Package Manager** | `dnf5` for system updates |
+| **Optional** | `flatpak` for Flatpak updates |
+| **Optional** | `fwupdmgr` for firmware updates |
+| **Build** | Rust 1.70+ (only if building from source) |
 
 ---
 
-## Installation
+## 📦 Installation
 
 ### Precompiled Binary
 
-1. Download the latest release binary from the [Releases](https://github.com/overdox/SysUpdater/releases) page.
-2. Place the binary in a directory in your `$PATH`, e.g.:
-   ```bash
-   mv sysupdater /usr/local/bin/
-   chmod +x /usr/local/bin/sysupdater
+1. Download the latest binary from the [Releases](https://github.com/overdox/SysUpdater/releases) page
+2. Install it:
 
+```bash
+sudo mv sysupdater /usr/local/bin/
+sudo chmod +x /usr/local/bin/sysupdater
+```
 
 ### Build from Source
-1. Clone the repository:
- ```
- git clone https://github.com/overdox/SysUpdater.git 
- cd SysUpdater
- ```
-2. Build the project:
-```
+
+```bash
+# Clone the repository
+git clone https://github.com/overdox/SysUpdater.git
+cd SysUpdater
+
+# Build with optimizations
 cargo build --release
+
+# Install
+sudo mv target/release/sysupdater /usr/local/bin/
 ```
 
-3. The binary will be located at target/release/sysupdater. Move it to a directory in your $PATH:
+---
+
+## 🚀 Usage
+
+Running `sysupdater` without arguments displays help:
+
 ```
-mv target/release/sysupdater /usr/local/bin/
-chmod +x /usr/local/bin/sysupdater
+╔═══════════════════════════════════════════╗
+║           SysUpdater v2.0.0               ║
+║     Fedora System Update Automation       ║
+╚═══════════════════════════════════════════╝
+
+USAGE
+
+    sudo sysupdater [OPTIONS]
+
+COMMANDS
+
+    -r, --refresh         Check and display available updates
+    -u, --update-all      Update everything (system + flatpak)
+        --update-system   Update only system packages (dnf5)
+        --update-flatpak  Update only Flatpak applications
+        --update-firmware Update only firmware
 ```
 
-### Usage
+### Quick Examples
 
-1. Run the tool with sudo:
+```bash
+# Show available updates
+sudo sysupdater --refresh
+
+# Update system and Flatpak packages
+sudo sysupdater --update-all
+
+# Update everything including firmware
+sudo sysupdater --update-all --firmware
+
+# Update only system packages
+sudo sysupdater --update-system
+
+# Preview what would happen (dry run)
+sudo sysupdater --update-all --dry-run
+
+# Quiet mode for scripts/cron
+sudo sysupdater --update-all --quiet --no-reboot-prompt
 ```
-sudo ./sysupdater
+
+---
+
+## 📖 Commands
+
+| Command | Short | Description |
+|---------|-------|-------------|
+| `--refresh` | `-r` | Check and display available updates without installing |
+| `--update-all` | `-u` | Update system packages and Flatpak applications |
+| `--update-system` | | Update only dnf5 system packages |
+| `--update-flatpak` | | Update only Flatpak applications |
+| `--update-firmware` | | Update only firmware |
+
+---
+
+## ⚙️ Options
+
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--firmware` | `-f` | Include firmware updates when using `--update-all` |
+| `--dry-run` | `-n` | Preview actions without executing |
+| `--no-reboot-prompt` | | Skip the reboot prompt after updates |
+| `--no-network-check` | | Skip network connectivity verification |
+| `--parallel` | | Run updates concurrently (may interleave output) |
+| `--config <FILE>` | `-c` | Use a custom configuration file |
+| `--verbose` | `-v` | Increase verbosity (use `-vv` or `-vvv` for more) |
+| `--quiet` | `-q` | Minimal output |
+
+---
+
+## 🔧 Configuration
+
+SysUpdater looks for configuration files in this order:
+
+1. Path specified with `--config`
+2. `/etc/sysupdater.toml`
+3. `~/.config/sysupdater/config.toml`
+
+### Example Configuration
+
+```toml
+[system]
+enabled = true       # Enable dnf5 system updates
+auto_remove = true   # Automatically remove unused packages
+refresh = true       # Refresh package metadata before updating
+
+[flatpak]
+enabled = true       # Enable Flatpak updates
+remove_unused = true # Remove unused Flatpak runtimes
+
+[firmware]
+enabled = false      # Firmware updates disabled by default
+
+[logging]
+file = "/var/log/sysupdater.log"
+level = "info"       # Options: error, warn, info, debug, trace
+
+[network]
+check_url = "https://fedoraproject.org"
+timeout_secs = 10
 ```
 
-2. SysUpdater will:
+---
 
-- Perform system updates using dnf5.
-- Perform Flatpak updates.
-- Clean up unused packages.
-- Check if a system reboot is required and prompt the user for action.
+## 📤 Exit Codes
 
-### Contributing
+| Code | Meaning |
+|------|---------|
+| `0` | Success |
+| `1` | General error |
+| `130` | Cancelled by user (CTRL+C) |
 
-We welcome contributions! Here's how you can help:
+---
 
-1. Fork the repository on GitHub.
-2. Create a new branch for your feature or fix.
-3. Make your changes and commit them.
-4. Open a Pull Request on the original repository.
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. **Fork** the repository on GitHub
+2. **Create** a new branch for your feature or fix
+3. **Make** your changes and commit them
+4. **Open** a Pull Request on the original repository
+
+Please ensure your code follows Rust best practices and includes appropriate tests.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  Made with ❤️ for the Fedora community
+</p>
