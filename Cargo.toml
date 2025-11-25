@@ -1,6 +1,6 @@
 [package]
-name = "fedora-utility-patchworker"
-version = "2.1.0"
+name = "fup"
+version = "2.1.2"
 edition = "2024"
 authors = ["Dox"]
 description = "A production-ready system updater for Fedora Linux"

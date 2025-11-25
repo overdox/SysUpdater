@@ -75,7 +75,7 @@ sudo mv target/release/fup /usr/local/bin/
 
 ```
 ╔═══════════════════════════════════════════╗
-║               FUP v2.1.0                  ║
+║               FUP v2.1.2                  ║
 ║     Fedora Utility Patchworker            ║
 ╚═══════════════════════════════════════════╝
 
