@@ -75,7 +75,7 @@ Ejecutar `fup` sin argumentos muestra la ayuda:
 
 ```
 ╔═══════════════════════════════════════════╗
-║               FUP v2.0.0                  ║
+║               FUP v2.1.0                  ║
 ║     Fedora Utility Patchworker            ║
 ╚═══════════════════════════════════════════╝
 
